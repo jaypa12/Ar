@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A-Frame Colorful Room</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Room -->
+      <a-box position="0 2 -5" width="10" height="4" depth="0.2" color="#808080"></a-box>
+      
+      <!-- Walls -->
+      <a-plane position="0 2 -4.9" rotation="0 0 0" width="10" height="4" color="#ff0000" class="wall" clickable></a-plane>
+      <a-plane position="4.9 2 0" rotation="0 -90 0" width="10" height="4" color="#00ff00" class="wall" clickable></a-plane>
+      <a-plane position="0 2 4.9" rotation="0 180 0" width="10" height="4" color="#0000ff" class="wall" clickable></a-plane>
+      <a-plane position="-4.9 2 0" rotation="0 90 0" width="10" height="4" color="#ffff00" class="wall" clickable></a-plane>
+      
+      <!-- Popup Box -->
+      <a-entity id="popup" visible="false" position="0 2 -5">
+        <a-box width="2" height="2" depth="0.2" color="#ffffff"></a-box>
+        <a-entity position="0 0.5 0" text="value: Choose a color; color: black; width: 1; align: center;"></a-entity>
+        <a-plane position="0 0 0.1" width="0.8" height="0.8" color="#ff0000" class="colorOption" clickable></a-plane>
+        <a-plane position="0 0 0.2" width="0.8" height="0.8" color="#00ff00" class="colorOption" clickable></a-plane>
+        <a-plane position="0 0 0.3" width="0.8" height="0.8" color="#0000ff" class="colorOption" clickable></a-plane>
+        <a-plane position="0 0 0.4" width="0.8" height="0.8" color="#ffff00" class="colorOption" clickable></a-plane>
+      </a-entity>
+      
+      <a-camera position="0 2 0"></a-camera>
+    </a-scene>
+    
+    <script>
+      AFRAME.registerComponent('clickable', {
+        init: function () {
+          this.el.addEventListener('click', this.onClick.bind(this));
+        },
+        onClick: function () {
+          console.log('Element clicked:', this.el);
+        }
+      });
+      
+      // Change wall color on click
+      const walls = document.getElementsByClassName('wall');
+      const popup = document.getElementById('popup');
+      const colorOptions = popup.getElementsByClassName('colorOption');
+      
+      for (let i = 0; i < walls.length; i++) {
+        walls[i].addEventListener('click', function () {
+          popup.setAttribute('position', walls[i].getAttribute('position'));
+          popup.setAttribute('visible', 'true');
+          
+          for (let j = 0; j < colorOptions.length; j++) {
+            colorOptions[j].addEventListener('click', function () {
+              const color = colorOptions[j].getAttribute('color');
+              walls[i].setAttribute('color', color);
+              popup.setAttribute('visible', 'false');
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
